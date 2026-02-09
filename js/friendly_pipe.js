@@ -752,8 +752,10 @@ function setupFriendlyPipeOut(nodeType, nodeData, app) {
         if (this.outputs) {
             for (let i = 0; i < this.outputs.length; i++) {
                 const slotNum = i + 1;
-                this.outputs[i].label = names[slotNum] || ("slot_" + slotNum);
-                this.outputs[i].type = types[slotNum] || "*";
+				const displayName = names[slotNum] || ("slot_" + slotNum);
+				this.outputs[i].label = displayName;
+				this.outputs[i].name = displayName;
+				this.outputs[i].type = types[slotNum] || "*";
             }
         }
         
@@ -825,7 +827,7 @@ function setupFriendlyPipeOut(nodeType, nodeData, app) {
         const linkId = this.inputs[0].link;
         debugLog("linkId:", linkId);
         
-        const link = graph.links[linkId];
+        const link = graph.links instanceof Map ? graph.links.get(linkId) : graph.links?.[linkId];
         debugLog("link:", link);
         
         if (!link) {
@@ -1207,7 +1209,7 @@ function setupFriendlyPipeEdit(nodeType, nodeData, app) {
         }
         
         const linkId = this.inputs[0].link;
-        const link = graph.links[linkId];
+        const link = graph.links instanceof Map ? graph.links.get(linkId) : graph.links?.[linkId];
         
         if (!link) return;
         
